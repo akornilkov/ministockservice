@@ -5,11 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var authRouter = require('./routes/auth');
-//var closedRouter = require('./routes/closed');
 var tickersRouter = require('./routes/tickers');
 var usersRouter = require('./routes/users');
 
 const {IsUserAuthorized, verifyUserToken} = require('./controllers/middleware');
+
+const dbFiller = require('./controllers/dbfiller');
 
 var app = express();
 
@@ -28,7 +29,7 @@ app.use('/api/tickers', tickersRouter);
 app.use('/api/users', usersRouter);
 
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Hey', user: req.user});
+  res.render('index', { title: 'Главная страница' });
 });
 
 app.get('/login', (req, res) => {
@@ -45,6 +46,11 @@ app.get('/register', (req, res) => {
   } else {
     res.render('register', { title: 'MiniStockService: Регистрация' });
   }
+});
+
+app.get('/dbfill', (req, res) => {
+  dbFiller();
+  res.redirect('/');
 });
 
 // catch 404 and forward to error handler
