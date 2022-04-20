@@ -9,6 +9,8 @@ var authRouter = require('./routes/auth');
 var tickersRouter = require('./routes/tickers');
 var usersRouter = require('./routes/users');
 
+const {IsUserAuthorized, verifyUserToken} = require('./controllers/middleware');
+
 var app = express();
 
 // view engine setup
@@ -21,10 +23,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', authRouter);
-//app.use('/closed', closedRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/tickers', tickersRouter);
 app.use('/api/users', usersRouter);
+
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Hey', user: req.user});
+});
+
+app.get('/login', (req, res) => {
+  if (req.user) {
+    res.redirect('/');
+  } else {
+    res.render('login', { title: 'MiniStockService: Вход' });
+  }
+});
+
+app.get('/register', (req, res) => {
+  if (req.user) {
+    res.redirect('/');
+  } else {
+    res.render('register', { title: 'MiniStockService: Регистрация' });
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

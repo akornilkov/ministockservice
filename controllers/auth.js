@@ -23,6 +23,7 @@ exports.register = async (req, res) => {
             // create payload then Generate an access token
             let payload = { id: registeredUser._id, user_type_id: req.body.user_type_id || 0 };
             const token = jwt.sign(payload, config.TOKEN_SECRET);
+            res.header('Authorization',`Bearer ${token}`);
             res.status(200).send({ token })
         }
     })
@@ -35,14 +36,12 @@ exports.login = async (req, res) => {
             res.status(500).send(JSON.stringify(err));
         } else {
             if (user) {
-                console.log(user);
                 const validPass = await bcrypt.compare(req.body.password, user.password);
-                console.log(user);
                 if (!validPass) return res.status(401).send("Mobile/Email or Password is wrong");
                 // Create and assign token
                 let payload = { id: user._id, user_type_id: user.user_type_id };
                 const token = jwt.sign(payload, config.TOKEN_SECRET);
-                res.status(200).header("auth-token", token).send({ "token": token });
+                res.status(200).header("Authorization", `Bearer ${token}`).send({ "token": token });
             }
             else {
                 res.status(401).send('Invalid mobile')

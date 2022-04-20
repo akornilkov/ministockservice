@@ -12,7 +12,7 @@ const periodicHandler = require('../controllers/periodic');
 router.get('/collection', verifyUserToken, (req,res) => {
     User.findById(req.user.id).then(
         (user) => {
-            res.status(200).json(user.package || {});
+            res.status(200).json(user.package);
         }
     ).catch(
         (error) => {
@@ -49,9 +49,9 @@ router.post('/collection', verifyUserToken, (req,res) => {
                             await ticker.save();
                             const result = await user.save();
                             await periodicHandler(user.id, ticker.id);
-                            res.status(200).json(result.package);
+                            return res.status(200).json(result.package);
                         } else {
-                            res.status(403).json({
+                            return res.status(403).json({
                                 "error": `There is only ${ticker.count} of ${ticker.name} in Stock, but you asked to withdraw ${count_tickers}`
                             })
                         }

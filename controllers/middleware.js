@@ -21,6 +21,12 @@ exports.verifyUserToken = (req, res, next) => {
     }
 }
 
+exports.IsUserAuthorized = (req, res, next) => {
+    let token = req.headers.authorization;
+    if (!token) return res.redirect('/login');
+    next();
+}
+
 exports.IsUser = async (req, res, next) => {
     if (req.user.user_type_id === UserTypeID) {
         return next();
