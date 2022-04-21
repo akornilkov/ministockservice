@@ -46,6 +46,7 @@ getAllTickers((result,error) => {
 
 const btn_addToMyCollection = document.getElementById('btn_addToMyCollection');
 const btn_getMyCollection = document.getElementById('btn_getMyCollection');
+const btn_getAllTickers = document.getElementById('btn_getAllTickers');
 
 btn_addToMyCollection.addEventListener('click', (e) => {
     e.preventDefault();
@@ -64,6 +65,17 @@ btn_getMyCollection.addEventListener('click', (e) => {
     getMyCollection((result,error) => {
         if (!error) {
             alert(`Успех(коллекция получена): ${JSON.stringify(result)}`);
+        } else {
+            alert(`Ошибка: ${JSON.stringify(error)}`);
+        }
+    })
+})
+
+btn_getAllTickers.addEventListener('click', (e) => {
+    e.preventDefault();
+    getAllTickers((result,error) => {
+        if (!error) {
+            alert(`Успех(тикеры получены): ${JSON.stringify(result)}`);
         } else {
             alert(`Ошибка: ${JSON.stringify(error)}`);
         }
